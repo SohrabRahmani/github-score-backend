@@ -44,7 +44,7 @@ The GitHub Score Backend provides a RESTful API for scoring GitHub repositories 
 1. Start the application:
     ```bash
    docker-compose up
-2. Access the API endpoints at http://localhost:8080/api/github.
+2. Access the API endpoints at http://localhost:8080/api.
 
 ## API Endpoints
 The GitHub Score Backend exposes the following HTTP endpoints:
