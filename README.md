@@ -15,8 +15,6 @@ This project implements a backend application for scoring repositories on GitHub
    - [Dynamic Configuration](#dynamic-configuration)
    - [Real-time Notifications](#real-time-notifications)
    - [Scalability](#scalability)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 The GitHub Score Backend provides a RESTful API for scoring GitHub repositories based on various factors such as stars, forks, and recency of updates. It also offers additional features like comparing repository scores, user-tailored scoring mechanisms, and scoring algorithm transparency.
