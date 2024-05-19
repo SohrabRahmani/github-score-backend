@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=githubscore_db
+      - POSTGRES_USER=githubscore_user
+      - POSTGRES_PASSWORD=githubscore_password
+    ports:
+      - "5432:5432"
+    networks:
+      - spring-network
+
+  githubscore-app:
+    build:
+      dockerfile: Dockerfile
+    container_name: githubscore-app
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-network
+
+networks:
+  spring-network:
+    name: spring-network

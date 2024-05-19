@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/githubscore_db
+    username: githubscore_user
+    password: githubscore_password
+  sql:
+    init:
+      mode: always
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: update
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+github:
+  api:
+    url: https://api.github.com
