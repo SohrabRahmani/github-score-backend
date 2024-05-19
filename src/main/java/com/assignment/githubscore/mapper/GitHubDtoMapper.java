@@ -1,10 +1,8 @@
 package com.assignment.githubscore.mapper;
 
-import com.assignment.githubscore.dto.*;
-import com.assignment.githubscore.model.*;
+import com.assignment.githubscore.dto.RepoItemDTO;
+import com.assignment.githubscore.model.RepoItem;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class GitHubDtoMapper {

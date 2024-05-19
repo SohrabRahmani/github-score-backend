@@ -2,7 +2,6 @@ package com.assignment.githubscore.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public record RepoItem(

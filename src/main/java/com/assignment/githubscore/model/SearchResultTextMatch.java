@@ -1,8 +1,7 @@
 package com.assignment.githubscore.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public record SearchResultTextMatch(
@@ -11,4 +10,5 @@ public record SearchResultTextMatch(
         @JsonProperty("property") String property,
         @JsonProperty("fragment") String fragment,
         @JsonProperty("matches") List<TextMatch> matches
-) {}
+) {
+}

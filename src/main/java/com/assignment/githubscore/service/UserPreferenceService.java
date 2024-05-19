@@ -8,7 +8,7 @@ import com.assignment.githubscore.mapper.UserPreferencesMapper;
 import com.assignment.githubscore.repository.UserPreferencesRepository;
 import org.springframework.stereotype.Service;
 
- import java.util.Optional;
+import java.util.Optional;
 
 @Service
 public class UserPreferenceService {
