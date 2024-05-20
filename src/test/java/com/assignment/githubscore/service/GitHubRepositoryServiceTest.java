@@ -86,27 +86,6 @@ class GitHubRepositoryServiceTest {
         assertEquals("N/A", gitHubRepositoryService.determineTrend(150.0d, 0.0d));
     }
 
-    private RepoItemDTO createItemDto(double popularityScore, int stargazersCount, int forksCount, String updatedAt) {
-        return new RepoItemDTO(
-                1,
-                popularityScore,
-                "same",
-                "1",
-                "test-repo",
-                "test-repo-full-name",
-                false,
-                "url",
-                false,
-                LocalDateTime.now().minusDays(30).toString(),
-                updatedAt,
-                stargazersCount,
-                "java",
-                forksCount,
-                false,
-                false
-        );
-    }
-
     private RepoItem createRepoItem(int id, int stargazersCount, int forksCount, LocalDateTime updatedAt) {
         return new RepoItem(
                 id, "", "Test Repo", "", null, false, "", "", false, "",
