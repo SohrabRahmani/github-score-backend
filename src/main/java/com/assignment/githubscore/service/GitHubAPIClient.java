@@ -25,23 +25,30 @@ public class GitHubAPIClient {
     }
 
     /**
-     * Search GitHub repositories based on language and earliest created date.
+     * Searches GitHub repositories based on language and earliest created date.
      *
      * @param language            The programming language to filter repositories.
      * @param earliestCreatedDate The earliest date when repositories were created.
      * @return The response containing the search results.
-     * @throws GitHubApiErrorHandler if there's an error while fetching repositories from GitHub API.
      */
     public SearchResponse searchRepositories(String language, LocalDate earliestCreatedDate) {
         String url = buildSearchUrl(language, earliestCreatedDate);
-        return webClient
-                .get()
+        return fetchData(url)
+                .blockOptional()
+                .orElse(null);
+    }
+
+    private Mono<SearchResponse> fetchData(String url) {
+        return webClient.get()
                 .uri(url)
                 .retrieve()
                 .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
-                        clientResponse -> Mono.error(new GitHubApiErrorHandler("Failed to fetch repositories from GitHub API")))
+                        response -> Mono.error(
+                                new GitHubApiErrorHandler(STR."Failed to fetch data from GitHub API. Client error: \{response.statusCode()}"))
+                )
                 .bodyToMono(SearchResponse.class)
-                .block();
+                .onErrorResume(throwable -> Mono.error(
+                        new GitHubApiErrorHandler(STR."Error fetching data from \{url}: \{throwable.getMessage()}")));
     }
 
     private String buildSearchUrl(String language, LocalDate earliestCreatedDate) {

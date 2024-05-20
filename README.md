@@ -61,6 +61,10 @@ The GitHub Score Backend exposes the following HTTP endpoints:
 - `GET /api/github/search`: Search GitHub repositories based on language and earliest created date.
 - `GET /api/github/score/breakdown`: Get the breakdown of popularity score for a repository based on stars, forks, and last updated date.
 
+### Assumptions
+
+- **No Security Implemented**: This application does not include any security measures. It is assumed that the `userId` passed in the header is authorized. In a production environment, proper authentication and authorization mechanisms should be implemented.
+
 ## Swagger Documentation
 The API documentation for the Messaging Application is available using Swagger.
 After starting the application, you can access the Swagger UI at http://localhost:8080/swagger-ui/index.html.

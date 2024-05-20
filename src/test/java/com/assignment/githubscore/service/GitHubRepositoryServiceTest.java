@@ -21,7 +21,6 @@ import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,12 +28,6 @@ class GitHubRepositoryServiceTest {
 
     @Mock
     private GitHubAPIClient gitHubAPIClient;
-
-    @Mock
-    private GitHubDtoMapper gitHubDtoMapper;
-
-    @Mock
-    private ScoringService scoringService;
 
     @Mock
     private RepositoryScoreRepository repositoryScoreRepository;
@@ -47,14 +40,11 @@ class GitHubRepositoryServiceTest {
         String language = "java";
         LocalDate earliestCreatedDate = LocalDate.now().minusDays(30);
         long userId = 1L;
-        String updateAt = LocalDateTime.now().minusDays(1).toString();
 
         RepoItem item = createRepoItem(1, 100, 50, LocalDateTime.now().minusDays(1));
         SearchResponse searchResponse = new SearchResponse(1, false, List.of(item));
 
         when(gitHubAPIClient.searchRepositories(language, earliestCreatedDate)).thenReturn(searchResponse);
-        when(scoringService.calculatePopularityScore(100, 50, updateAt, userId)).thenReturn(150.0);
-        when(gitHubDtoMapper.toRepoItemDTO(any(), eq(150.0), eq("N/A"))).thenReturn(createItemDto(150.0, 100, 50, updateAt));
 
         List<RepoItemDTO> result = gitHubRepositoryService.getFilteredRepositories(language, earliestCreatedDate, userId);
 

@@ -3,6 +3,7 @@ package com.assignment.githubscore.controller;
 import com.assignment.githubscore.dto.UserPreferencesDTO;
 import com.assignment.githubscore.service.UserPreferenceService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,8 +25,8 @@ public class UserPreferenceController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "User preferences saved successfully")})
     @PostMapping
     public ResponseEntity<UserPreferencesDTO> saveUserPreferences(
-            @RequestBody UserPreferencesDTO userPreferencesDTO,
-            @RequestHeader("userId") long userId) {
+            @Parameter(description = "User preferences data") @RequestBody UserPreferencesDTO userPreferencesDTO,
+            @Parameter(description = "ID of the user making the request") @RequestHeader("userId") long userId) {
         userPreferencesDTO = new UserPreferencesDTO(
                 userId,
                 userPreferencesDTO.starsWeight(),
@@ -40,7 +41,7 @@ public class UserPreferenceController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "User preferences retrieved successfully")})
     @GetMapping
     public ResponseEntity<UserPreferencesDTO> getUserPreferences(
-            @RequestHeader("userId") Long userId) {
+            @Parameter(description = "ID of the user making the request") @RequestHeader("userId") Long userId) {
         UserPreferencesDTO userPreferencesDTO = userPreferenceService.getUserPreferences(userId)
                 .orElseGet(() -> userPreferenceService.getDefaultUserPreferences(userId));
         return ResponseEntity.ok(userPreferencesDTO);
@@ -50,8 +51,8 @@ public class UserPreferenceController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "User preferences updated successfully")})
     @PutMapping
     public ResponseEntity<UserPreferencesDTO> updateUserPreferences(
-            @RequestBody UserPreferencesDTO userPreferencesDTO,
-            @RequestHeader("userId") long userId) {
+            @Parameter(description = "User preferences data") @RequestBody UserPreferencesDTO userPreferencesDTO,
+            @Parameter(description = "ID of the user making the request") @RequestHeader("userId") long userId) {
         userPreferencesDTO = new UserPreferencesDTO(
                 userId,
                 userPreferencesDTO.starsWeight(),
@@ -64,7 +65,8 @@ public class UserPreferenceController {
     @Operation(summary = "Delete User Preferences", description = "Delete user preferences for scoring algorithm factors.")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "User preferences deleted successfully")})
     @DeleteMapping
-    public ResponseEntity<Void> deleteUserPreferences(@RequestHeader long userId) {
+    public ResponseEntity<Void> deleteUserPreferences(
+            @Parameter(description = "ID of the user making the request") @RequestHeader("userId") long userId) {
         userPreferenceService.deleteUserPreferences(userId);
         return ResponseEntity.noContent().build();
     }

@@ -8,8 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -27,35 +26,40 @@ public class ScoringServiceTest {
 
     @Test
     public void testCalculatePopularityScore() {
+        int maxForks = 50;
+        int maxStars = 100;
+
         UserPreferencesDTO userPreferences = new UserPreferencesDTO(1, 0.4, 0.3, 0.3);
         when(userPreferenceService.getUserPreferences(anyLong())).thenReturn(java.util.Optional.of(userPreferences));
 
-        LocalDateTime updatedAt = LocalDateTime.now().minusDays(10);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        String updatedAtString = updatedAt.format(formatter);
+        LocalDate updatedAt = LocalDate.now().minusDays(10);
+        LocalDate earliestCreatedDate = LocalDate.now().minusDays(100);
 
-        double popularityScore = scoringService.calculatePopularityScore(100, 50, updatedAtString, 1);
+        double popularityScore = scoringService.calculatePopularityScore(100, 50, updatedAt, maxStars, maxForks, earliestCreatedDate, 1);
 
-        assertEquals(55.027, popularityScore, 0.001);
+        assertEquals(0.97, popularityScore, 0.001);
     }
 
     @Test
     public void testCalculatePopularityScoreWithBreakdown() {
+        int maxForks = 50;
+        int maxStars = 100;
+
         UserPreferencesDTO userPreferences = new UserPreferencesDTO(1, 0.4, 0.3, 0.3);
         when(userPreferenceService.getUserPreferences(anyLong())).thenReturn(java.util.Optional.of(userPreferences));
 
-        LocalDateTime updatedAt = LocalDateTime.now().minusDays(10);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        String updatedAtString = updatedAt.format(formatter);
+        LocalDate updatedAt = LocalDate.now().minusDays(10);
+        LocalDate earliestCreatedDate = LocalDate.now().minusDays(10);
 
-        ScoreBreakdownDTO scoreBreakdown = scoringService.calculatePopularityScoreWithBreakdown(100, 50, updatedAtString, 1);
+        ScoreBreakdownDTO scoreBreakdown = scoringService.calculatePopularityScoreWithBreakdown(
+                100, 50, maxStars, maxForks, earliestCreatedDate, updatedAt, 1);
 
         assertEquals(0.4, scoreBreakdown.starsWeight());
         assertEquals(0.3, scoreBreakdown.forksWeight());
         assertEquals(0.3, scoreBreakdown.recencyWeight());
-        assertEquals(40.0, scoreBreakdown.starsFactor());
-        assertEquals(15.0, scoreBreakdown.forksFactor());
-        assertEquals(0.027, scoreBreakdown.recencyFactor(), 0.001);
-        assertEquals(55.027, scoreBreakdown.finalScore(), 0.001);
+        assertEquals(0.4, scoreBreakdown.starsFactor());
+        assertEquals(0.3, scoreBreakdown.forksFactor());
+        assertEquals(0.0, scoreBreakdown.recencyFactor(), 0.001);
+        assertEquals(0.7, scoreBreakdown.finalScore(), 0.001);
     }
 }

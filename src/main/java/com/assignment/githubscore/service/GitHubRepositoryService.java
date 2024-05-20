@@ -3,12 +3,14 @@ package com.assignment.githubscore.service;
 import com.assignment.githubscore.dto.RepoItemDTO;
 import com.assignment.githubscore.entity.RepositoryScore;
 import com.assignment.githubscore.mapper.GitHubDtoMapper;
+import com.assignment.githubscore.model.RepoItem;
 import com.assignment.githubscore.model.SearchResponse;
 import com.assignment.githubscore.repository.RepositoryScoreRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +21,8 @@ public class GitHubRepositoryService {
     private final GitHubDtoMapper gitHubDtoMapper;
     private final ScoringService scoringService;
     private final RepositoryScoreRepository repositoryScoreRepository;
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
     public GitHubRepositoryService(GitHubAPIClient gitHubAPIClient, GitHubDtoMapper gitHubDtoMapper,
                                    ScoringService scoringService, RepositoryScoreRepository repositoryScoreRepository) {
@@ -39,7 +43,9 @@ public class GitHubRepositoryService {
 
     public List<RepoItemDTO> getFilteredRepositories(String language, LocalDate earliestCreatedDate, long userId) {
         SearchResponse searchResponse = fetchRepositories(language, earliestCreatedDate);
-        return mapToRepoItemDTOs(searchResponse, userId);
+        int maxStars = findMaxStarsCount(searchResponse);
+        int maxForks = findMaxForksCount(searchResponse);
+        return mapToRepoItemDTOs(searchResponse, maxStars, maxForks, earliestCreatedDate, userId);
     }
 
     /**
@@ -61,23 +67,27 @@ public class GitHubRepositoryService {
     /**
      * Maps search response items to repository DTOs with popularity scores and trends.
      *
-     * @param searchResponse The search response from the GitHub API.
-     * @param userId         The ID of the user requesting the repositories.
+     * @param searchResponse      The search response from the GitHub API.
+     * @param maxStars            The max stars for a repository
+     * @param maxForks            The max fork for a repository
+     * @param earliestCreatedDate The earliest date when repositories were created.
+     * @param userId              The ID of the user requesting the repositories.
      * @return A list of repository DTOs with popularity scores and trends.
      */
-    private List<RepoItemDTO> mapToRepoItemDTOs(SearchResponse searchResponse, long userId) {
+    private List<RepoItemDTO> mapToRepoItemDTOs(SearchResponse searchResponse, int maxStars, int maxForks, LocalDate earliestCreatedDate, long userId) {
         return searchResponse.items().stream()
                 .map(item -> {
                     Optional<RepositoryScore> previousScoreOpt = getPreviousScore(item.id());
                     double previousScore = previousScoreOpt.map(RepositoryScore::getPopularityScore).orElse(0.0);
-
                     double popularityScore = scoringService.calculatePopularityScore(
                             item.stargazersCount(),
                             item.forksCount(),
-                            item.updatedAt(),
+                            LocalDate.parse(item.updatedAt(), DATE_TIME_FORMATTER),
+                            maxStars,
+                            maxForks,
+                            earliestCreatedDate,
                             userId
                     );
-
                     saveCurrentScore(item.id(), item.name(), popularityScore);
 
                     String trend = determineTrend(popularityScore, previousScore);
@@ -124,5 +134,27 @@ public class GitHubRepositoryService {
      */
     private Optional<RepositoryScore> getPreviousScore(int repoId) {
         return repositoryScoreRepository.findTopByRepoIdOrderByRecordedAtDesc(repoId);
+    }
+
+    public int findMaxStarsCount(SearchResponse searchResponse) {
+        if (searchResponse != null && searchResponse.items() != null && !searchResponse.items().isEmpty()) {
+            return searchResponse.items().stream()
+                    .map(RepoItem::stargazersCount)
+                    .max(Integer::compareTo)
+                    .orElse(0);
+        } else {
+            return 0;
+        }
+    }
+
+    public int findMaxForksCount(SearchResponse searchResponse) {
+        if (searchResponse != null && searchResponse.items() != null && !searchResponse.items().isEmpty()) {
+            return searchResponse.items().stream()
+                    .map(RepoItem::forksCount)
+                    .max(Integer::compareTo)
+                    .orElse(0);
+        } else {
+            return 0;
+        }
     }
 }
