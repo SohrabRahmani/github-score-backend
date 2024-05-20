@@ -11,6 +11,8 @@ This project implements a backend application for scoring repositories on GitHub
    - [User Preferences](#user-preferences)
    - [GitHub Repositories](#github-repositories)
 - [Configuration](#configuration)
+- [Swagger Documentation](#swagger-documentation)
+- [Environment Variables](#environment-variables)
 - [Improvements](#improvements)
    - [Dynamic Configuration](#dynamic-configuration)
    - [Real-time Notifications](#real-time-notifications)
@@ -58,6 +60,21 @@ The GitHub Score Backend exposes the following HTTP endpoints:
 ### GitHub Repositories
 - `GET /api/github/search`: Search GitHub repositories based on language and earliest created date.
 - `GET /api/github/score/breakdown`: Get the breakdown of popularity score for a repository based on stars, forks, and last updated date.
+
+## Swagger Documentation
+The API documentation for the Messaging Application is available using Swagger.
+After starting the application, you can access the Swagger UI at http://localhost:8080/swagger-ui/index.html.
+This UI provides detailed documentation of all available endpoints, request parameters, and response schemas.
+
+## Environment Variables
+The following environment variables are available for configuration:
+
+- `DB_URL`: PostgreSQL database URL.
+- `DB_NAME`: PostgreSQL database name.
+- `DB_USERNAME`: PostgreSQL database username.
+- `DB_PASSWORD`: PostgreSQL database password.
+- `SPRING_JPA_HIBERNATE_DDL_AUTO`: Hibernate DDL auto configuration.
+- `SPRING_JPA_HIBERNATE_DIALECT`: Hibernate Dialect Configuration.
 
 ## Configuration
 You can configure the application using environment variables or by modifying the [application.yml](src%2Fmain%2Fresources%2Fapplication.yml) file.
