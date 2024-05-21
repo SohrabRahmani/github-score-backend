@@ -20,5 +20,4 @@ spring:
 
 github:
   api:
-    url:
-      search: repository=https://api.github.com/search/repositories
+    url: https://api.github.com

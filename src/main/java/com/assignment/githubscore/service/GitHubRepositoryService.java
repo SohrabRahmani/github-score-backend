@@ -79,6 +79,8 @@ public class GitHubRepositoryService {
                 .map(item -> {
                     Optional<RepositoryScore> previousScoreOpt = getPreviousScore(item.id());
                     double previousScore = previousScoreOpt.map(RepositoryScore::getPopularityScore).orElse(0.0);
+                    long previousScoreId = previousScoreOpt.map(RepositoryScore::getId).orElse(0L);
+
                     double popularityScore = scoringService.calculatePopularityScore(
                             item.stargazersCount(),
                             item.forksCount(),
@@ -88,9 +90,9 @@ public class GitHubRepositoryService {
                             earliestCreatedDate,
                             userId
                     );
-                    saveCurrentScore(item.id(), item.name(), popularityScore);
-
+                    saveCurrentScore(previousScoreId, item.id(), item.name(), popularityScore);
                     String trend = determineTrend(popularityScore, previousScore);
+
                     return gitHubDtoMapper.toRepoItemDTO(item, popularityScore, trend);
                 })
                 .toList();
@@ -99,16 +101,19 @@ public class GitHubRepositoryService {
     /**
      * Saves the current popularity score of a repository to the database.
      *
+     * @param id              The ID of the score record.
      * @param repoId          The ID of the repository.
      * @param repoName        The name of the repository.
      * @param popularityScore The popularity score of the repository.
      */
-    private void saveCurrentScore(int repoId, String repoName, double popularityScore) {
+    private void saveCurrentScore(Long id, int repoId, String repoName, double popularityScore) {
         RepositoryScore repositoryScore = new RepositoryScore();
+        repositoryScore.setId(id);
         repositoryScore.setRepoId(repoId);
         repositoryScore.setRepoName(repoName);
         repositoryScore.setPopularityScore(popularityScore);
         repositoryScore.setRecordedAt(LocalDateTime.now());
+
         repositoryScoreRepository.save(repositoryScore);
     }
 
@@ -133,7 +138,7 @@ public class GitHubRepositoryService {
      * @return An optional containing the previous repository score, if available.
      */
     private Optional<RepositoryScore> getPreviousScore(int repoId) {
-        return repositoryScoreRepository.findTopByRepoIdOrderByRecordedAtDesc(repoId);
+        return repositoryScoreRepository.findByRepoId(repoId);
     }
 
     public int findMaxStarsCount(SearchResponse searchResponse) {
