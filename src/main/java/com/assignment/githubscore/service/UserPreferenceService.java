@@ -3,6 +3,7 @@ package com.assignment.githubscore.service;
 import com.assignment.githubscore.dto.UserPreferencesDTO;
 import com.assignment.githubscore.entity.UserPreferences;
 import com.assignment.githubscore.enums.WeightFactor;
+import com.assignment.githubscore.exception.ConflictException;
 import com.assignment.githubscore.exception.NoSuchElementException;
 import com.assignment.githubscore.mapper.UserPreferencesMapper;
 import com.assignment.githubscore.repository.UserPreferencesRepository;
@@ -28,6 +29,11 @@ public class UserPreferenceService {
      * @return The saved user preferences.
      */
     public UserPreferencesDTO saveUserPreferences(UserPreferencesDTO userPreferencesDTO) {
+        long userId = userPreferencesDTO.userId();
+        Optional<UserPreferencesDTO> existingPreferences = getUserPreferences(userId);
+        if (existingPreferences.isPresent()) {
+            throw new ConflictException(STR."User preferences already exist for user ID: \{userId}");
+        }
         UserPreferences userPreferences = userPreferencesMapper.toEntity(userPreferencesDTO);
         return userPreferencesMapper.toDto(userPreferencesRepository.save(userPreferences));
     }
