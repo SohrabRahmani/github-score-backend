@@ -10,6 +10,7 @@ This project implements a backend application for scoring repositories on GitHub
 - [API Endpoints](#api-endpoints)
    - [User Preferences](#user-preferences)
    - [GitHub Repositories](#github-repositories)
+   - [Assumptions](#assumptions)
 - [Configuration](#configuration)
 - [Swagger Documentation](#swagger-documentation)
 - [Environment Variables](#environment-variables)
