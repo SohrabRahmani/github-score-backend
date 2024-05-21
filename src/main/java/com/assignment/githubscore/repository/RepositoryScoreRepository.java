@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface RepositoryScoreRepository extends JpaRepository<RepositoryScore, Long> {
 
-    Optional<RepositoryScore> findTopByRepoIdOrderByRecordedAtDesc(long repoId);
+    Optional<RepositoryScore> findByRepoId(long repoId);
 }

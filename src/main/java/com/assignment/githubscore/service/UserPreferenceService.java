@@ -55,14 +55,14 @@ public class UserPreferenceService {
     }
 
     /**
-     * Deletes user preferences from the database.
+     * Deletes user preferences from the database by user ID.
      *
      * @param userId The ID of the user whose preferences should be deleted.
      * @throws NoSuchElementException if the user preferences for the given user ID are not found.
      */
     public void deleteUserPreferences(long userId) {
         UserPreferences existingPreferences = getUserPreferencesById(userId);
-        userPreferencesRepository.delete(existingPreferences);
+        userPreferencesRepository.deleteById(existingPreferences.getId());
     }
 
     /**

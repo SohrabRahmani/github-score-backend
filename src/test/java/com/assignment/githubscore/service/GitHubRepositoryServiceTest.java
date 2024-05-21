@@ -27,6 +27,12 @@ import static org.mockito.Mockito.*;
 class GitHubRepositoryServiceTest {
 
     @Mock
+    ScoringService scoringService;
+
+    @Mock
+    GitHubDtoMapper gitHubDtoMapper;
+
+    @Mock
     private GitHubAPIClient gitHubAPIClient;
 
     @Mock

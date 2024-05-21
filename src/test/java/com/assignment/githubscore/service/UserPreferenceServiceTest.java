@@ -72,11 +72,14 @@ class UserPreferenceServiceTest {
     @Test
     void deleteUserPreferences() {
         UserPreferences existingPreferences = new UserPreferences();
-        when(userPreferencesRepository.findByUserId(anyLong())).thenReturn(Optional.of(existingPreferences));
+        existingPreferences.setId(1L);
+        existingPreferences.setUserId(1L);
+
+        when(userPreferencesRepository.findByUserId(1L)).thenReturn(Optional.of(existingPreferences));
 
         userPreferenceService.deleteUserPreferences(1L);
 
-        verify(userPreferencesRepository, times(1)).delete(existingPreferences);
+        verify(userPreferencesRepository, times(1)).deleteById(1L);
     }
 
     @Test

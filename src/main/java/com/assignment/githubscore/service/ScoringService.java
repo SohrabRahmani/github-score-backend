@@ -84,10 +84,10 @@ public class ScoringService {
                 preferences.starsWeight(),
                 preferences.forksWeight(),
                 preferences.recencyWeight(),
-                roundToThreeDecimals(starsFactor),
-                roundToThreeDecimals(forksFactor),
-                roundToThreeDecimals(recencyFactor),
-                roundToThreeDecimals(score)
+                roundToTwoDecimals(starsFactor),
+                roundToTwoDecimals(forksFactor),
+                roundToTwoDecimals(recencyFactor),
+                roundToTwoDecimals(score)
         );
     }
 
@@ -97,10 +97,10 @@ public class ScoringService {
         double recencyFactor = recency * userPreferences.recencyWeight();
         double score = starsFactor + forksFactor + recencyFactor;
 
-        return roundToThreeDecimals(score);
+        return roundToTwoDecimals(score);
     }
 
-    private static double roundToThreeDecimals(double value) {
+    private static double roundToTwoDecimals(double value) {
         return Math.round(value * ROUNDING_FACTOR) / (double) ROUNDING_FACTOR;
     }
 

@@ -67,7 +67,7 @@ The GitHub Score Backend exposes the following HTTP endpoints:
 - **No Security Implemented**: This application does not include any security measures. It is assumed that the `userId` passed in the header is authorized. In a production environment, proper authentication and authorization mechanisms should be implemented.
 
 ## Swagger Documentation
-The API documentation for the Messaging Application is available using Swagger.
+The API documentation for the GitHub Score Application is available using Swagger.
 After starting the application, you can access the Swagger UI at http://localhost:8080/swagger-ui/index.html.
 This UI provides detailed documentation of all available endpoints, request parameters, and response schemas.
 
@@ -88,7 +88,6 @@ See Configuration section in the source code for available options.
 ## Improvements
 ### Dynamic Configuration
 Implement a mechanism to dynamically adjust scoring algorithm parameters based on usage patterns and feedback. This could involve machine learning models or user feedback mechanisms to continuously optimize the scoring algorithm.
-Historical Data Analysis
 
 ### Real-time Notifications
 Implement real-time notifications for users based on changes in repository scores or user preferences.
@@ -98,5 +97,4 @@ Implement real-time notifications for users based on changes in repository score
 Scalability ensures the GitHub Score Backend can handle more users and interactions effectively. Here's how:
 
 - **Horizontal Scaling**: Adding more servers to distribute the workload ensures responsiveness and reliability as user interactions grow.
-- **Database Scaling**: Techniques like sharding distribute data across multiple nodes to handle increasing data volumes efficiently.
 - **Caching**: Storing frequently accessed data in memory reduces database load and improves response times for API requests.
